@@ -8,7 +8,9 @@ function initServer(port) {
 
     // Simulated SMS Gateway API Endpoints
     app.use('/api', apiService);
-
+app.get('/', (req, res) => {
+    res.status(200).send('KAP OTP BOT is running');
+});
     // Dynamic Platform Server Diagnostic Output
     app.get('/status', (req, res) => {
         res.json({
@@ -17,7 +19,7 @@ function initServer(port) {
             status: 'online'
         });
     });
-
+     
     const server = app.listen(port, () => {
         console.log(`🌐 Platform server listening on port ${port}`);
         logger.info('SERVER_BOOT', `Server listening on port ${port}`);
