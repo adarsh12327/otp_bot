@@ -1,0 +1,114 @@
+{
+    "7972816159": {
+        "balance": 200,
+        "locked": 0,
+        "history": [
+            {
+                "type": "REFERRAL_COMMISSION",
+                "amount": 100,
+                "timestamp": "2026-06-22T12:03:54.558Z",
+                "description": "Affiliate bonus from referee registration ID 6509244485"
+            },
+            {
+                "type": "WITHDRAWAL_PAID",
+                "amount": 100,
+                "timestamp": "2026-06-23T13:07:12.273Z",
+                "description": "Withdrawal successfully paid to: Kapadarsh@fam"
+            },
+            {
+                "type": "REFERRAL_COMMISSION",
+                "amount": 100,
+                "timestamp": "2026-06-24T08:46:50.812Z",
+                "description": "Affiliate bonus from referee registration ID 6509244485"
+            },
+            {
+                "type": "REFERRAL_COMMISSION",
+                "amount": 100,
+                "timestamp": "2026-06-24T08:46:52.942Z",
+                "description": "Affiliate bonus from referee registration ID 6509244485"
+            },
+            {
+                "type": "WITHDRAWAL_PAID",
+                "amount": 200,
+                "timestamp": "2026-06-24T08:48:40.559Z",
+                "description": "Withdrawal successfully paid to: Kahdid"
+            }
+        ]
+    },
+    "8569538779": {
+        "balance": 278,
+        "locked": 0,
+        "history": [
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 278,
+                "timestamp": "2026-06-24T08:23:17.808Z"
+            },
+            {
+                "type": "WITHDRAWAL_REJECT",
+                "amount": 277,
+                "timestamp": "2026-06-24T08:40:32.514Z",
+                "description": "Withdrawal rejected: Balance returned to wallet."
+            }
+        ]
+    },
+    "6509244485": {
+        "balance": 3000,
+        "locked": 0,
+        "history": [
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 1000,
+                "timestamp": "2026-06-22T12:03:53.833Z",
+                "description": "Recharge confirmation of payment UTR: 283838388383"
+            },
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 1000,
+                "timestamp": "2026-06-24T08:46:50.102Z",
+                "description": "Recharge confirmation of payment UTR: 47656756666"
+            },
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 1000,
+                "timestamp": "2026-06-24T08:46:52.272Z",
+                "description": "Recharge confirmation of payment UTR: 88888888888"
+            }
+        ]
+    },
+    "": {
+        "balance": 1200,
+        "history": [
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 1000,
+                "timestamp": "2026-06-23T14:49:50.805Z"
+            },
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 100,
+                "timestamp": "2026-06-23T16:51:17.855Z"
+            },
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 100,
+                "timestamp": "2026-06-23T16:51:55.091Z"
+            },
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 100,
+                "timestamp": "2026-06-23T17:02:49.965Z"
+            },
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 100,
+                "timestamp": "2026-06-24T08:04:56.662Z"
+            },
+            {
+                "type": "DEBIT_MANUAL",
+                "amount": 200,
+                "timestamp": "2026-06-24T08:05:18.259Z"
+            }
+        ]
+    }
+}

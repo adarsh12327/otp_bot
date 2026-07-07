@@ -1,0 +1,358 @@
+{
+    "8569538779": {
+        "balance": 0,
+        "locked": 0,
+        "history": []
+    },
+    "7972816159": {
+        "balance": 220,
+        "locked": false,
+        "history": [
+            {
+                "type": "REFERRAL_COMMISSION",
+                "amount": 100,
+                "timestamp": "2026-06-25T11:28:47.660Z",
+                "description": "Affiliate bonus from referee registration ID 6509244485"
+            },
+            {
+                "type": "WITHDRAWAL_PAID",
+                "amount": 80,
+                "timestamp": "2026-06-25T11:29:48.330Z",
+                "description": "Withdrawal successfully paid to: kapadarsh@123"
+            },
+            {
+                "type": "WITHDRAWAL_PAID",
+                "amount": 80,
+                "timestamp": "2026-06-25T13:18:26.558Z",
+                "description": "Withdrawal successfully paid to: Kfhuguihi"
+            },
+            {
+                "type": "DEBIT_MANUAL",
+                "amount": 80,
+                "timestamp": "2026-06-25T13:58:30.491Z"
+            },
+            {
+                "type": "WITHDRAWAL_REJECT",
+                "amount": 20,
+                "timestamp": "2026-06-25T14:01:31.875Z",
+                "description": "Withdrawal rejected: Balance returned to wallet."
+            },
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 200,
+                "timestamp": "2026-06-25T14:02:19.056Z",
+                "description": "Recharge confirmation of payment UTR: 384848848484"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 81.9,
+                "timestamp": "2026-06-26T12:13:17.345Z",
+                "description": "Purchased Telegram (India)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 81.9,
+                "timestamp": "2026-06-26T12:15:28.584Z",
+                "description": "Refund for order ord_fr4mgzs"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 91.98,
+                "timestamp": "2026-06-27T08:21:47.693Z",
+                "description": "Purchased Whatsapp (India)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 91.98,
+                "timestamp": "2026-06-27T08:23:55.250Z",
+                "description": "Refund for order ord_yb59hfn"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 10.08,
+                "timestamp": "2026-06-27T09:20:10.716Z",
+                "description": "Purchased Story tv (India)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 10.08,
+                "timestamp": "2026-06-27T09:22:21.224Z",
+                "description": "Refund for order ord_dmb3gas"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 50.4,
+                "timestamp": "2026-06-28T08:53:09.688Z",
+                "description": "Purchased Telegram (India)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 50.4,
+                "timestamp": "2026-06-28T08:55:19.342Z",
+                "description": "Refund for order ord_r20eeo8"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 22.68,
+                "timestamp": "2026-06-30T15:15:52.637Z",
+                "description": "Purchased Telegram (Colombia)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 22.68,
+                "timestamp": "2026-06-30T15:17:59.392Z",
+                "description": "Refund for order ord_642smk0"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 31.5,
+                "timestamp": "2026-07-01T14:44:45.685Z",
+                "description": "Purchased Whatsapp (Colombia)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 31.5,
+                "timestamp": "2026-07-01T15:04:48.382Z",
+                "description": "Refund for order ord_tdsav9e"
+            },
+            {
+                "type": "WITHDRAWAL_REJECT",
+                "amount": 20,
+                "timestamp": "2026-07-01T23:27:42.926Z",
+                "description": "Withdrawal rejected: Balance returned to wallet."
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 22.68,
+                "timestamp": "2026-07-02T08:37:13.425Z",
+                "description": "Purchased Telegram (Colombia)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 22.68,
+                "timestamp": "2026-07-02T08:39:19.401Z",
+                "description": "Refund for order ord_iihfkn3"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 22.68,
+                "timestamp": "2026-07-02T08:52:51.092Z",
+                "description": "Purchased Telegram (Colombia)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 22.68,
+                "timestamp": "2026-07-02T09:00:09.893Z",
+                "description": "Refund for order ord_m5n9v9t"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 22.68,
+                "timestamp": "2026-07-02T09:22:32.997Z",
+                "description": "Purchased Telegram (Colombia)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 22.68,
+                "timestamp": "2026-07-02T09:27:56.656Z",
+                "description": "Refund for order ord_p3klir0"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 70.56,
+                "timestamp": "2026-07-02T12:20:13.258Z",
+                "description": "Purchased Whatsapp (USA)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 70.56,
+                "timestamp": "2026-07-02T12:32:03.784Z",
+                "description": "Refund for order ord_n7r3ktu"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 30.03,
+                "timestamp": "2026-07-03T09:47:31.261Z",
+                "description": "Purchased Telegram (Nepal)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 30.03,
+                "timestamp": "2026-07-03T09:57:19.736Z",
+                "description": "Refund for order ord_elqmzfj"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 40.43,
+                "timestamp": "2026-07-03T11:59:14.462Z",
+                "description": "Purchased Telegram (USA)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 40.43,
+                "timestamp": "2026-07-03T12:01:31.774Z",
+                "description": "Refund for order ord_wx6jmpe"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 20.79,
+                "timestamp": "2026-07-03T12:26:44.712Z",
+                "description": "Purchased Telegram (Colombia)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 20.79,
+                "timestamp": "2026-07-03T12:42:18.378Z",
+                "description": "Refund for order ord_xn3hgh5"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 20.79,
+                "timestamp": "2026-07-03T12:42:57.123Z",
+                "description": "Purchased Telegram (Colombia)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 20.79,
+                "timestamp": "2026-07-03T12:48:25.400Z",
+                "description": "Refund for order ord_qj1fo7g"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 40.43,
+                "timestamp": "2026-07-03T12:56:30.024Z",
+                "description": "Purchased Telegram (USA)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 40.43,
+                "timestamp": "2026-07-03T12:56:38.055Z",
+                "description": "Refund for order ord_o3ljwdj"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 40.43,
+                "timestamp": "2026-07-03T13:34:25.926Z",
+                "description": "Purchased Telegram (USA)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 40.43,
+                "timestamp": "2026-07-03T13:40:32.784Z",
+                "description": "Refund for order ord_qohsvnu"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 28.88,
+                "timestamp": "2026-07-04T07:28:09.430Z",
+                "description": "Purchased Whatsapp (Colombia)"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 20.79,
+                "timestamp": "2026-07-04T07:28:47.333Z",
+                "description": "Purchased Telegram (Colombia)"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 40.43,
+                "timestamp": "2026-07-04T07:29:22.462Z",
+                "description": "Purchased Telegram (USA)"
+            },
+            {
+                "type": "AUTO_REFUND",
+                "amount": 28.88,
+                "timestamp": "2026-07-04T07:49:19.673Z",
+                "description": "Recovery rollback refund for timed out order #ord_z58lvd1"
+            },
+            {
+                "type": "AUTO_REFUND",
+                "amount": 20.79,
+                "timestamp": "2026-07-04T07:49:20.869Z",
+                "description": "Recovery rollback refund for timed out order #ord_lrqm87n"
+            },
+            {
+                "type": "AUTO_REFUND",
+                "amount": 40.43,
+                "timestamp": "2026-07-04T07:49:33.850Z",
+                "description": "Recovery rollback refund for timed out order #ord_0964ohs"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 40.43,
+                "timestamp": "2026-07-04T07:50:24.813Z",
+                "description": "Purchased Telegram (USA)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 40.43,
+                "timestamp": "2026-07-04T07:55:29.122Z",
+                "description": "Refund for order ord_cycx9c7"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 40.43,
+                "timestamp": "2026-07-04T08:17:44.019Z",
+                "description": "Purchased Telegram (USA)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 40.43,
+                "timestamp": "2026-07-04T08:42:11.126Z",
+                "description": "Refund for order ord_jswkcdu"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 20.79,
+                "timestamp": "2026-07-04T08:42:50.643Z",
+                "description": "Purchased Telegram (Colombia)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 20.79,
+                "timestamp": "2026-07-04T08:47:55.466Z",
+                "description": "Refund for order ord_qnrbsoa"
+            },
+            {
+                "type": "DEBIT_PURCHASE",
+                "amount": 80.85,
+                "timestamp": "2026-07-04T08:59:50.724Z",
+                "description": "Purchased Telegram (Brazil)"
+            },
+            {
+                "type": "REFUND",
+                "amount": 80.85,
+                "timestamp": "2026-07-04T09:05:05.917Z",
+                "description": "Refund for order ord_dz6mzly"
+            }
+        ]
+    },
+    "6509244485": {
+        "balance": 1000,
+        "locked": 0,
+        "history": [
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 1000,
+                "timestamp": "2026-06-25T11:28:46.994Z",
+                "description": "Recharge confirmation of payment UTR: kapadarsh@123"
+            }
+        ]
+    },
+    "8286947651": {
+        "balance": 24,
+        "locked": false,
+        "history": [
+            {
+                "type": "RECHARGE_CREDIT",
+                "amount": 24,
+                "timestamp": "2026-06-28T06:52:11.821Z"
+            }
+        ]
+    },
+    "6747832972": {
+        "balance": 0,
+        "locked": 0,
+        "history": []
+    }
+}

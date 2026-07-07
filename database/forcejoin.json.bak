@@ -1,0 +1,9 @@
+{
+    "enabled": false,
+    "channels": [
+        {
+            "type": "public",
+            "username": "@kaplooters"
+        }
+    ]
+}

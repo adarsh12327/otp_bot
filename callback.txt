@@ -1,0 +1,431 @@
+   650	        logger.error('ERROR', `Support command crashed: ${err.message}`, ctx.from.id);
+   651	    }
+   652	});
+   653	
+   654	bot.hears('💼 Admin Panel', (ctx) => {
+   655	    try {
+   656	        const settings = db.loadDb('settings.json');
+   657	        if (!config.isAdmin(ctx.from.id) && !(settings.admins && settings.admins.includes(ctx.from.id.toString()))) return;
+   658	        logger.info('ADMIN_ACTION', 'Accessed Admin Dashboard.', ctx.from.id);
+   659	return safeAdminMenu(ctx);
+   660	    } catch (err) {
+   661	        logger.error('ERROR', `Admin Panel command crashed: ${err.message}`, ctx.from.id);
+   662	    }
+   663	});
+   664	
+   665	// ==========================================
+   666	// INLINE CALLBACK MUTEX ROUTING CONTROLLER
+   667	// ==========================================
+   668	bot.on('callback_query', async (ctx) => {
+   669	    let processed = false;
+   670	    try {
+   671	        const data = ctx.callbackQuery.data;
+   672	        const userId = ctx.from.id.toString();
+   673	        const settings = db.loadDb('settings.json');
+   674	        const isAdmin = config.isAdmin(ctx.from.id) || (settings.admins && settings.admins.includes(userId));
+   675	
+   676	        logger.info('CALLBACK', `Executed callback: ${data}`, ctx.from.id);
+   677	        ctx.answerCbQuery().catch(() => {});
+   678	
+   679	        // Reject banned accounts in callback processing
+   680	        if (settings.banned_users && settings.banned_users.includes(userId)) {
+   681	            logger.warn('SECURITY_ALERT', 'Banned account attempted callback interaction.', userId);
+   682	            return ctx.reply('❌ You have been banned from using this platform.');
+   683	        }
+   684	
+   685	        // ==========================================
+   686	        // SaaS ADMINISTRATION CALLBACK SYSTEM
+   687	        // ==========================================
+   688	if (
+   689	   data.startsWith('admin_') ||
+   690	   data.startsWith('adm_') ||
+   691	   data.startsWith('country_') ||
+   692	   data.startsWith('cat_add_')
+   693	) {
+   694	          if (!isAdmin) {
+   695	                logger.warn('SECURITY_ALERT', 'Unauthorized admin callback access attempt.', userId);
+   696	                return ctx.reply('❌ Unauthorized access.');
+   697	            }
+   698	
+   699	            if (data === 'admin_menu') {
+   700	                processed = true;
+   701	                try {
+   702	                    return safeAdminMenu(ctx);
+   703	                } catch (err) {
+   704	                    logger.error('CALLBACK_ERROR', `admin_menu failed: ${err.message}`, ctx.from.id);
+   705	                }
+   706	            }
+   707	            if (data === 'admin_products') {
+   708	                processed = true;
+   709	                try {
+   710	                    return await adminHandler.renderProductsAdmin(ctx);
+   711	                } catch (err) {
+   712	                    logger.error('CALLBACK_ERROR', `admin_products failed: ${err.message}`, ctx.from.id);
+   713	                }
+   714	            }
+   715	            if (data === 'admin_categories') {
+   716	                processed = true;
+   717	                try {
+   718	                    return await adminHandler.renderCategoryManagerMenu(ctx);
+   719	                } catch (err) {
+   720	                    logger.error('CALLBACK_ERROR', `admin_categories failed: ${err.message}`, ctx.from.id);
+   721	                }
+   722	            }
+   723	            if (data === 'admin_countries') {
+   724	                processed = true;
+   725	                try {
+   726	                    return await adminHandler.renderCountryManagerMenu(ctx);
+   727	                } catch (err) {
+   728	                    logger.error('CALLBACK_ERROR', `admin_countries failed: ${err.message}`, ctx.from.id);
+   729	                }
+   730	            }
+   731	            if (data === 'admin_services') {
+   732	                processed = true;
+   733	                try {
+   734	                    return await adminHandler.renderServiceManagerMenu(ctx);
+   735	                } catch (err) {
+   736	                    logger.error('CALLBACK_ERROR', `admin_services failed: ${err.message}`, ctx.from.id);
+   737	                }
+   738	            }
+   739	            if (data === 'admin_recharges') {
+   740	                processed = true;
+   741	                try {
+   742	                    return await adminHandler.renderRechargeQueue(ctx);
+   743	                } catch (err) {
+   744	                    logger.error('CALLBACK_ERROR', `admin_recharges failed: ${err.message}`, ctx.from.id);
+   745	                }
+   746	            }
+   747	            if (data === 'admin_withdraws') {
+   748	                processed = true;
+   749	                try {
+   750	                    return await adminHandler.renderWithdrawQueue(ctx);
+   751	                } catch (err) {
+   752	                    logger.error('CALLBACK_ERROR', `admin_withdraws failed: ${err.message}`, ctx.from.id);
+   753	                }
+   754	            }
+   755	            if (data === 'admin_providers') {
+   756	                processed = true;
+   757	                try {
+   758	                    return await adminHandler.renderProvidersAdmin(ctx);
+   759	                } catch (err) {
+   760	                    logger.error('CALLBACK_ERROR', `admin_providers failed: ${err.message}`, ctx.from.id);
+   761	                }
+   762	            }
+   763	            if (data === 'admin_fraud_center') {
+   764	                processed = true;
+   765	                try {
+   766	                    return await adminHandler.renderFraudCenter(ctx);
+   767	                } catch (err) {
+   768	                    logger.error('CALLBACK_ERROR', `admin_fraud_center failed: ${err.message}`, ctx.from.id);
+   769	                }
+   770	            }
+   771	            if (data === 'admin_configs') {
+   772	                processed = true;
+   773	                try {
+   774	                    return await adminHandler.renderConfigsAdmin(ctx);
+   775	                } catch (err) {
+   776	                    logger.error('CALLBACK_ERROR', `admin_configs failed: ${err.message}`, ctx.from.id);
+   777	                }
+   778	            }
+   779	if (
+   780	    data.startsWith('fj_') &&
+   781	    data !== 'fj_verify'
+   782	) {
+   783	    if (!isAdmin) {
+   784	        return ctx.reply('❌ Unauthorized access.');
+   785	    }
+   786	}
+   787	
+   788	if (data === 'admin_forcejoin') {
+   789	    processed = true;
+   790	    try {
+   791	        const forcejoin = db.loadDb('forcejoin.json') || {
+   792	            enabled: true,
+   793	            channels: []
+   794	        };
+   795	
+   796	        let txt =
+   797	`📢 <b>FORCE JOIN MANAGER</b>
+   798	
+   799	Status: ${forcejoin.enabled ? '🟢 ENABLED' : '🔴 DISABLED'}
+   800	
+   801	Channels: ${forcejoin.channels.length}
+   802	
+   803	Manage force join channels below.`;
+   804	
+   805	        return ctx.editMessageText(txt, {
+   806	            parse_mode: 'HTML',
+   807	            reply_markup: {
+   808	                inline_keyboard: [
+   809	                    [
+   810	                        {
+   811	                            text: '➕ Add Channel',
+   812	                            callback_data: 'fj_add_channel'
+   813	                        }
+   814	                    ],
+   815	                    [
+   816	                        {
+   817	                            text: '📋 Channel List',
+   818	                            callback_data: 'fj_list'
+   819	                        }
+   820	                    ],
+   821	                    [
+   822	                        {
+   823	                            text: forcejoin.enabled
+   824	                                ? '🔴 Disable'
+   825	                                : '🟢 Enable',
+   826	                            callback_data: 'fj_toggle'
+   827	                        }
+   828	                    ],
+   829	                    [
+   830	                        {
+   831	                            text: '⬅️ Back',
+   832	                            callback_data: 'admin_menu'
+   833	                        }
+   834	                    ]
+   835	                ]
+   836	            }
+   837	        });
+   838	
+   839	    } catch (err) {
+   840	        logger.error(
+   841	            'CALLBACK_ERROR',
+   842	            `admin_forcejoin failed: ${err.message}`,
+   843	            ctx.from.id
+   844	        );
+   845	    }
+   846	}
+   847	if (data === 'fj_add_channel') {
+   848	    processed = true;
+   849	
+   850	    ctx.session.step = 'FJ_SELECT_TYPE';
+   851	
+   852	return ctx.editMessageText(
+   853	        '📢 Select Channel Type',
+   854	        {
+   855	            reply_markup: {
+   856	                inline_keyboard: [
+   857	                    [
+   858	                        {
+   859	                            text: '🌐 Public Channel',
+   860	                            callback_data: 'fj_public'
+   861	                        }
+   862	                    ],
+   863	                    [
+   864	                        {
+   865	                            text: '🔒 Private Channel',
+   866	                            callback_data: 'fj_private'
+   867	                        }
+   868	                    ],
+   869	                    [
+   870	                        {
+   871	                            text: '⬅️ Back',
+   872	                            callback_data: 'admin_forcejoin'
+   873	                        }
+   874	                    ]
+   875	                ]
+   876	            }
+   877	        }
+   878	    );
+   879	}
+   880	
+   881	if (data === 'fj_public') {
+   882	    processed = true;
+   883	
+   884	    ctx.session.step = 'FJ_PUBLIC_USERNAME';
+   885	
+   886	    console.log(
+   887	        'DEBUG STEP:',
+   888	        ctx.session.step
+   889	    );
+   890	
+   891	    return ctx.reply(
+   892	        '🌐 Send Public Channel Username\n\nExample:\n@mychannel'
+   893	    );
+   894	}
+   895	if (data === 'fj_private') {
+   896	    processed = true;
+   897	
+   898	    ctx.session.step = 'FJ_PRIVATE_ID';
+   899	
+   900	    console.log(
+   901	        'DEBUG STEP:',
+   902	        ctx.session.step
+   903	    );
+   904	
+   905	    return ctx.reply(
+   906	        '🔒 Send Private Channel ID\n\nExample:\n-1001234567890'
+   907	    );
+   908	}
+   909	if (data === 'fj_toggle') {
+   910	    processed = true;
+   911	
+   912	    const forcejoin = db.loadDb('forcejoin.json') || {
+   913	        enabled: true,
+   914	        channels: []
+   915	    };
+   916	
+   917	    forcejoin.enabled = !forcejoin.enabled;
+   918	
+   919	    db.saveDb('forcejoin.json', forcejoin);
+   920	
+   921	    return ctx.reply(
+   922	        forcejoin.enabled
+   923	            ? '✅ Force Join Enabled'
+   924	            : '❌ Force Join Disabled'
+   925	    );
+   926	}
+   927	if (data === 'fj_list') {
+   928	console.log('FJ_LIST_START');
+   929	    processed = true;
+   930	
+   931	    const forcejoin = db.loadDb('forcejoin.json') || {
+   932	        enabled: true,
+   933	        channels: []
+   934	    };
+   935	
+   936	    if (forcejoin.channels.length === 0) {
+   937	        return ctx.reply('❌ No force join channels found.');
+   938	    }
+   939	
+   940	    let txt = '📋 FORCE JOIN CHANNELS\n\n';
+   941	    const buttons = [];
+   942	
+   943	    forcejoin.channels.forEach((ch, index) => {
+   944	
+   945	        if (ch.type === 'public') {
+   946	            txt += `${index + 1}. 🌐 ${ch.username}\n`;
+   947	        } else {
+   948	            txt += `${index + 1}. 🔒 ${ch.channelId}\n`;
+   949	        }
+   950	
+   951	        buttons.push([
+   952	            {
+   953	                text: `🗑 Delete #${index + 1}`,
+   954	                callback_data: `fj_delete_${index}`
+   955	            }
+   956	        ]);
+   957	    });
+   958	
+   959	    buttons.push([
+   960	        {
+   961	            text: '⬅️ Back',
+   962	            callback_data: 'admin_forcejoin'
+   963	        }
+   964	    ]);
+   965	console.log(txt);
+   966	console.log(buttons);
+   967	    return ctx.reply(txt, {
+   968	        reply_markup: {
+   969	            inline_keyboard: buttons
+   970	        }
+   971	    });
+   972	}
+   973	
+   974	if (data.startsWith('fj_delete_')) {
+   975	    processed = true;
+   976	
+   977	    const index = parseInt(
+   978	        data.replace('fj_delete_', '')
+   979	    );
+   980	
+   981	    const forcejoin = db.loadDb('forcejoin.json') || {
+   982	        enabled: true,
+   983	        channels: []
+   984	    };
+   985	
+   986	    if (
+   987	        !isNaN(index) &&
+   988	        forcejoin.channels[index]
+   989	    ) {
+   990	        forcejoin.channels.splice(index, 1);
+   991	
+   992	        db.saveDb(
+   993	            'forcejoin.json',
+   994	            forcejoin
+   995	        );
+   996	
+   997	        return ctx.reply(
+   998	            '✅ Channel deleted successfully.'
+   999	        );
+  1000	    }
+  1001	
+  1002	    return ctx.reply(
+  1003	        '❌ Invalid channel.'
+  1004	    );
+  1005	}
+  1006	if (data === 'fj_verify') {
+  1007	    processed = true;
+  1008	
+  1009	    const forcejoin = db.loadDb('forcejoin.json') || {
+  1010	        enabled: true,
+  1011	        channels: []
+  1012	    };
+  1013	
+  1014	    let allJoined = true;
+  1015	
+  1016	    for (const ch of forcejoin.channels) {
+  1017	
+  1018	        if (ch.type === 'public') {
+  1019	
+  1020	            try {
+  1021	               const member = await ctx.telegram.getChatMember(
+  1022	    ch.username.replace('@', ''),
+  1023	    ctx.from.id
+  1024	);
+  1025	console.log(
+  1026	    'VERIFY:',
+  1027	    ch.username,
+  1028	    ctx.from.id
+  1029	);
+  1030	                if (
+  1031	                    member.status === 'left' ||
+  1032	                    member.status === 'kicked'
+  1033	                ) {
+  1034	                    allJoined = false;
+  1035	                    break;
+  1036	                }
+  1037	
+  1038	  } catch (e) {
+  1039	    console.log('VERIFY ERROR:', e.message);
+  1040	    allJoined = false;
+  1041	    break;
+  1042	}
+  1043	        }
+  1044	    }
+  1045	
+  1046	    if (!allJoined) {
+  1047	        return ctx.reply(
+  1048	            '❌ Please join all required channels first.'
+  1049	        );
+  1050	    }
+  1051	
+  1052	    return userHandler.handleStart(ctx);
+  1053	}
+  1054	
+  1055	            // ===== ADMIN SETTINGS CALLBACKS =====
+  1056	            if (data === 'adm_cfg_botname_init') {
+  1057	                processed = true;
+  1058	                try {
+  1059	                    ctx.session.step = 'ADM_CFG_BOTNAME';
+  1060	                    return ctx.reply('🤖 Enter new Platform Name:');
+  1061	                } catch (err) {
+  1062	                    logger.error('CALLBACK_ERROR', `adm_cfg_botname_init failed: ${err.message}`, ctx.from.id);
+  1063	                }
+  1064	            }
+  1065	
+  1066	            if (data === 'adm_cfg_support_init') {
+  1067	                processed = true;
+  1068	                try {
+  1069	                    ctx.session.step = 'ADM_CFG_SUPPORT';
+  1070	                    return ctx.reply('💬 Enter Support Handle (without @):');
+  1071	                } catch (err) {
+  1072	                    logger.error('CALLBACK_ERROR', `adm_cfg_support_init failed: ${err.message}`, ctx.from.id);
+  1073	                }
+  1074	            }
+  1075	
+  1076	            if (data === 'adm_cfg_currency_init') {
+  1077	                processed = true;
+  1078	                try {
+  1079	                    ctx.session.step = 'ADM_CFG_CURRENCY';
+  1080	                    return ctx.reply('💳 Enter Currency Symbol (Example: ₹):');

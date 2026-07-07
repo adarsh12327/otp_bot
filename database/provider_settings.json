@@ -1,0 +1,22 @@
+{
+    "grizzly": {
+        "enabled": true,
+        "apiKey": "d7f9f062a506aed333139193fa0d1d36",
+        "baseUrl": "https://api.grizzlysms.com/stubs/handler_api.php"
+    },
+    "sms_activate": {
+        "enabled": false,
+        "apiKey": "",
+        "baseUrl": ""
+    },
+    "fivesim": {
+        "enabled": false,
+        "apiKey": "",
+        "baseUrl": ""
+    },
+    "sms_man": {
+        "enabled": false,
+        "apiKey": "",
+        "baseUrl": ""
+    }
+}

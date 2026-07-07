@@ -1,0 +1,363 @@
+require('dotenv').config();
+const axios = require('axios');
+const logger = require('../utils/logger');
+const { loadDb, saveDb } = require('../utils/database');
+/*const { writeAuditLog } = require('../utils/audit');
+*/
+/**
+ * Loads dynamic provider settings with standard API configurations.
+ */
+function getProviderSettings() {
+    let settings = {};
+    try {
+        settings = loadDb('provider_settings.json');
+    } catch (e) {}
+
+const defaults = {
+    grizzly: {
+        enabled: true,
+        apiKey: process.env.API_KEY || 'mock_grizzly_key',
+        baseUrl: 'https://api.grizzlysms.com/stubs/handler_api.php'
+    },
+    sms_activate: {
+        enabled: false,
+        apiKey: '',
+        baseUrl: ''
+    },
+    fivesim: {
+        enabled: false,
+        apiKey: '',
+        baseUrl: ''
+    },
+    sms_man: {
+        enabled: false,
+        apiKey: '',
+        baseUrl: ''
+    }
+};
+
+    if (!settings || Object.keys(settings).length === 0) {
+        saveDb('provider_settings.json', defaults);
+        return defaults;
+    }
+    return settings;
+}
+
+function saveProviderSettings(settings) {
+    saveDb('provider_settings.json', settings);
+}
+
+/**
+ * Standardized API1 driver mapping requests across all 4 supported providers.
+ */
+async function callProviderApi(providerKey, action, params = {}) {
+    const settings = getProviderSettings()[providerKey];
+    if (!settings || !settings.enabled) return null;
+
+    if (settings.apiKey.startsWith('mock_')) {
+        return getMockResponse(providerKey, action, params);
+    }
+
+    try {
+        const response = await axios.get(settings.baseUrl, {
+            params: {
+                api_key: settings.apiKey,
+                action,
+                ...params
+            },
+            timeout: 6000
+        });
+console.log(
+    '[PROVIDER]',
+    providerKey,
+    action,
+    response.data
+);
+
+return response.data;
+    } catch (err) {
+        if (providerKey === 'grizzly') {
+            logger.warn('GRIZZLY_API_WARNING', `Grizzly API action ${action} failed: ${err.message}. Keeping old database.`);
+        } else {
+            logger.error('PROVIDER_API_ERROR', `${providerKey} action ${action} failed: ${err.message}`);
+        }
+        return null;
+    }
+}
+
+/**
+ * Enterprise smart mock generator to facilitate zero-setup local development and testing.
+ */
+function getMockResponse(providerKey, action, params) {
+    if (action === 'getCountries') {
+        return [
+            { id: '0', name: 'Russia' },
+            { id: '1', name: 'Ukraine' },
+            { id: '2', name: 'Kazakhstan' },
+            { id: '22', name: 'India' },
+            { id: '187', name: 'United States' }
+        ];
+    }
+    if (action === 'getServices') {
+        return [
+            { code: 'tg', name: 'Telegram' },
+            { code: 'wa', name: 'WhatsApp' },
+            { code: 'go', name: 'Google' },
+            { code: 'fb', name: 'Facebook' },
+            { code: 'tw', name: 'Twitter' }
+        ];
+    }
+    if (action === 'getPrices') {
+        const cost = providerKey === 'fivesim' ? 4.5 :
+                     providerKey === 'grizzly' ? 5.2 :
+                     providerKey === 'sms_activate' ? 5.8 : 6.5;
+        const count = Math.floor(Math.random() * 200) + 5;
+        const res = {};
+        const cId = params.country || '22';
+        const sCode = params.service || 'tg';
+        res[cId] = {};
+        res[cId][sCode] = { cost, count };
+        return res;
+    }
+    if (action === 'getNumber') {
+        const mockNum = '+1' + Math.floor(2000000000 + Math.random() * 8000000000);
+        return `ACCESS_NUMBER:mock_${providerKey}_${Math.floor(Math.random() * 1000000)}:${mockNum}`;
+    }
+    return null;
+}
+
+/**
+ * Smart Routing: queries active providers, returns list sorted by price ascending.
+ */
+async function getBestProviderAndPrice(serviceCode, countryCode) {
+    const settings = getProviderSettings();
+    const candidates = [];
+
+    for (const [providerKey, providerConf] of Object.entries(settings)) {
+        if (!providerConf.enabled) continue;
+
+        try {
+            const rawPrices = await callProviderApi(providerKey, 'getPrices', {
+                country: countryCode,
+                service: serviceCode
+            });
+
+            if (rawPrices && rawPrices[countryCode] && rawPrices[countryCode][serviceCode]) {
+                const info = rawPrices[countryCode][serviceCode];
+                if (parseInt(info.count) > 0) {
+                    candidates.push({
+                        providerKey,
+                        cost: parseFloat(info.cost) || 99.0,
+                        count: parseInt(info.count) || 0
+                    });
+                }
+            }
+        } catch (e) {
+            // Soft failure: isolate failure of a single provider and continue routing checks
+        }
+    }
+
+    candidates.sort((a, b) => a.cost - b.cost);
+    return candidates;
+}
+
+/**
+ * Line allocator wrapper designed to execute direct line assignments.
+ */
+async function allocateLine(providerKey, serviceCode, countryCode) {
+    const res = await callProviderApi(providerKey, 'getNumber', {
+        service: serviceCode,
+        country: countryCode
+    });
+    if (res && typeof res === 'string' && res.startsWith('ACCESS_NUMBER')) {
+        const parts = res.split(':');
+        return {
+            number: parts[2],
+            providerId: parts[1],
+            providerSysId: providerKey
+        };
+    }
+    throw new Error(res || 'Allocation limit or stock shortage on provider API.');
+}
+
+/**
+ * Public dynamic lookup sync methods with built-in safety catch blocks.
+ */
+async function getCountries() {
+    try {
+        return await callProviderApi('sms_activate', 'getCountries') || [];
+    } catch (err) {
+        logger.error('SYNC_ERROR', `getCountries failed: ${err.message}`);
+        return [];
+    }
+}
+
+async function getServices() {
+    try {
+        return await callProviderApi('sms_activate', 'getServices') || [];
+    } catch (err) {
+        logger.error('SYNC_ERROR', `getServices failed: ${err.message}`);
+        return [];
+    }
+}
+
+/**
+ * Live SMS delivery polling.
+ */
+async function checkStatus(providerSysId, providerOrderId) {
+    const state = await callProviderApi(providerSysId, 'getStatus', { id: providerOrderId });
+    if (state && typeof state === 'string') {
+        if (state.startsWith('STATUS_OK')) {
+            return { status: 'STATUS_OK', code: state.split(':')[1] };
+        } else if (state === 'STATUS_WAIT_CODE') {
+            return { status: 'STATUS_WAIT_CODE' };
+        }
+    }
+    return { status: 'STATUS_CANCEL' };
+}
+
+/**
+ * SMS activation termination updates on dynamic provider systems.
+ */
+async function setStatus(providerSysId, providerOrderId, status) {
+    return await callProviderApi(providerSysId, 'setStatus', { id: providerOrderId, status }) || 'ERROR';
+}
+
+/**
+ * Dynamic DB Synchronizer for Services & Countries metadata.
+ */
+async function runSync() {
+    try {
+        const countries = await getCountries();
+        const services = await getServices();
+
+        let existingCountries = [];
+        let existingServices = [];
+        let existingCategories = [];
+
+        try { 
+            existingCountries = loadDb('countries_db.json'); 
+        } catch (e) {
+            logger.warn('SYNC_WARNING', 'Countries database file could not be read. Initialized to empty array.');
+        }
+
+        try { 
+            existingServices = loadDb('services_db.json'); 
+        } catch (e) {
+            logger.warn('SYNC_WARNING', 'Services database file could not be read. Initialized to empty array.');
+        }
+
+        try { 
+            existingCategories = loadDb('categories_db.json'); 
+        } catch (e) {
+            logger.warn('SYNC_WARNING', 'Categories database file could not be read. Initialized to empty array.');
+        }
+
+        // Validate database formats and issue warning events if invalid or corrupt
+        if (!Array.isArray(existingCountries)) {
+            logger.warn(
+                'SYNC_WARNING',
+                'Countries database invalid. Auto-recovered to empty array.'
+            );
+        }
+
+        if (!Array.isArray(existingServices)) {
+            logger.warn(
+                'SYNC_WARNING',
+                'Services database invalid. Auto-recovered to empty array.'
+            );
+        }
+
+        if (!Array.isArray(existingCategories)) {
+            logger.warn(
+                'SYNC_WARNING',
+                'Categories database invalid. Auto-recovered to empty array.'
+            );
+        }
+
+        // Before any find(), map(), filter(), forEach() call:
+        existingCountries = Array.isArray(existingCountries)
+            ? existingCountries
+            : [];
+
+        existingServices = Array.isArray(existingServices)
+            ? existingServices
+            : [];
+
+        existingCategories = Array.isArray(existingCategories)
+            ? existingCategories
+            : [];
+
+        // Check fetched API outputs to avoid overwriting functional databases with blank or invalid structures
+        let updatedCountries = existingCountries;
+        if (Array.isArray(countries) && countries.length > 0) {
+            updatedCountries = countries.map(c => {
+                const match = existingCountries.find(ec => ec.id === c.id);
+                return {
+                    id: c.id,
+                    name: c.name,
+                    enabled: match ? match.enabled : true
+                };
+            });
+            saveDb('countries_db.json', updatedCountries);
+        } else {
+            logger.warn('SYNC_WARNING', 'Countries dynamic sync data empty or unavailable. Preserving existing database.');
+        }
+
+        let updatedServices = existingServices;
+        if (Array.isArray(services) && services.length > 0) {
+            updatedServices = services.map(s => {
+                const match = existingServices.find(es => es.code === s.code);
+                return {
+                    code: s.code,
+                    name: s.name,
+                    enabled: match ? match.enabled : true,
+                    markupPercent: match ? match.markupPercent : 15,
+                    markupFlat: match ? match.markupFlat : 1.0
+                };
+            });
+            saveDb('services_db.json', updatedServices);
+        } else {
+            logger.warn('SYNC_WARNING', 'Services dynamic sync data empty or unavailable. Preserving existing database.');
+        }
+
+        saveDb('sync_meta.json', { lastSynced: Date.now() });
+
+   /*     writeAuditLog('DATABASE_SYNC', 'Successfully synced countries and services across active provider networks.', 'SYSTEM');*/
+        logger.info('SYNC_SUCCESS', 'Dynamic country and service registries successfully synced.');
+    } catch (err) {
+        logger.error('SYNC_ERROR', `Dynamic sync task failed: ${err.message}`);
+    }
+}
+
+/**
+ * Lazy Sync: executes dynamic update check if delta exceeds 6 hours.
+ */
+async function checkLazySync() {
+    try {
+        const meta = loadDb('sync_meta.json') || {};
+        if (!meta.lastSynced || (Date.now() - meta.lastSynced > 6 * 60 * 60 * 1000)) {
+            await runSync();
+        }
+    } catch (e) {
+        logger.warn('SYNC_LAZY_WARNING', `Lazy sync check failed: ${e.message}. Attempting dynamic recovery.`);
+        try {
+            await runSync();
+        } catch (innerError) {
+            logger.error('SYNC_EMERGENCY_ERROR', `Emergency sync also failed: ${innerError.message}`);
+        }
+    }
+}
+
+module.exports = {
+    getProviderSettings,
+    saveProviderSettings,
+    getBestProviderAndPrice,
+    allocateLine,
+    checkStatus,
+    setStatus,
+    getCountries,
+    getServices,
+    runSync,
+    checkLazySync
+};

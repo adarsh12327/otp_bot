@@ -1,0 +1,21 @@
+{
+    "7972816159": {
+        "referredUsers": [
+            {
+                "userId": "6509244485",
+                "status": "DEPOSITED",
+                "earned": 100
+            },
+            {
+                "userId": "8286947651",
+                "status": "REGISTERED",
+                "earned": 0
+            }
+        ],
+        "earnings": {
+            "total": 0,
+            "pending": 20,
+            "paid": 80
+        }
+    }
+}

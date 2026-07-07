@@ -1,0 +1,37 @@
+[
+    {
+        "code": "tg",
+        "name": "Telegram",
+        "enabled": true,
+        "markupPercent": 15,
+        "markupFlat": 1
+    },
+    {
+        "code": "wa",
+        "name": "WhatsApp",
+        "enabled": true,
+        "markupPercent": 15,
+        "markupFlat": 1
+    },
+    {
+        "code": "go",
+        "name": "Google",
+        "enabled": true,
+        "markupPercent": 15,
+        "markupFlat": 1
+    },
+    {
+        "code": "fb",
+        "name": "Facebook",
+        "enabled": true,
+        "markupPercent": 15,
+        "markupFlat": 1
+    },
+    {
+        "code": "tw",
+        "name": "Twitter",
+        "enabled": true,
+        "markupPercent": 15,
+        "markupFlat": 1
+    }
+]

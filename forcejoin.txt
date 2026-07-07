@@ -1,0 +1,276 @@
+                    logger.error('CALLBACK_ERROR', `admin_providers failed: ${err.message}`, ctx.from.id);
+                }
+            }
+            if (data === 'admin_fraud_center') {
+                processed = true;
+                try {
+                    return await adminHandler.renderFraudCenter(ctx);
+                } catch (err) {
+                    logger.error('CALLBACK_ERROR', `admin_fraud_center failed: ${err.message}`, ctx.from.id);
+                }
+            }
+            if (data === 'admin_configs') {
+                processed = true;
+                try {
+                    return await adminHandler.renderConfigsAdmin(ctx);
+                } catch (err) {
+                    logger.error('CALLBACK_ERROR', `admin_configs failed: ${err.message}`, ctx.from.id);
+                }
+            }
+if (
+    data.startsWith('fj_') &&
+    data !== 'fj_verify'
+) {
+    if (!isAdmin) {
+        return ctx.reply('❌ Unauthorized access.');
+    }
+}
+
+if (data === 'admin_forcejoin') {
+    processed = true;
+    try {
+        const forcejoin = db.loadDb('forcejoin.json') || {
+            enabled: true,
+            channels: []
+        };
+
+        let txt =
+`📢 <b>FORCE JOIN MANAGER</b>
+
+Status: ${forcejoin.enabled ? '🟢 ENABLED' : '🔴 DISABLED'}
+
+Channels: ${forcejoin.channels.length}
+
+Manage force join channels below.`;
+
+        return ctx.editMessageText(txt, {
+            parse_mode: 'HTML',
+            reply_markup: {
+                inline_keyboard: [
+                    [
+                        {
+                            text: '➕ Add Channel',
+                            callback_data: 'fj_add_channel'
+                        }
+                    ],
+                    [
+                        {
+                            text: '📋 Channel List',
+                            callback_data: 'fj_list'
+                        }
+                    ],
+                    [
+                        {
+                            text: forcejoin.enabled
+                                ? '🔴 Disable'
+                                : '🟢 Enable',
+                            callback_data: 'fj_toggle'
+                        }
+                    ],
+                    [
+                        {
+                            text: '⬅️ Back',
+                            callback_data: 'admin_menu'
+                        }
+                    ]
+                ]
+            }
+        });
+
+    } catch (err) {
+        logger.error(
+            'CALLBACK_ERROR',
+            `admin_forcejoin failed: ${err.message}`,
+            ctx.from.id
+        );
+    }
+}
+if (data === 'fj_add_channel') {
+    processed = true;
+
+    ctx.session.step = 'FJ_SELECT_TYPE';
+
+return ctx.editMessageText(
+        '📢 Select Channel Type',
+        {
+            reply_markup: {
+                inline_keyboard: [
+                    [
+                        {
+                            text: '🌐 Public Channel',
+                            callback_data: 'fj_public'
+                        }
+                    ],
+                    [
+                        {
+                            text: '🔒 Private Channel',
+                            callback_data: 'fj_private'
+                        }
+                    ],
+                    [
+                        {
+                            text: '⬅️ Back',
+                            callback_data: 'admin_forcejoin'
+                        }
+                    ]
+                ]
+            }
+        }
+    );
+}
+
+if (data === 'fj_public') {
+    processed = true;
+
+    ctx.session.step = 'FJ_PUBLIC_USERNAME';
+
+    console.log(
+        'DEBUG STEP:',
+        ctx.session.step
+    );
+
+    return ctx.reply(
+        '🌐 Send Public Channel Username\n\nExample:\n@mychannel'
+    );
+}
+if (data === 'fj_private') {
+    processed = true;
+
+    ctx.session.step = 'FJ_PRIVATE_ID';
+
+    console.log(
+        'DEBUG STEP:',
+        ctx.session.step
+    );
+
+    return ctx.reply(
+        '🔒 Send Private Channel ID\n\nExample:\n-1001234567890'
+    );
+}
+if (data === 'fj_toggle') {
+    processed = true;
+
+    const forcejoin = db.loadDb('forcejoin.json') || {
+        enabled: true,
+        channels: []
+    };
+
+    forcejoin.enabled = !forcejoin.enabled;
+
+    db.saveDb('forcejoin.json', forcejoin);
+
+    return ctx.reply(
+        forcejoin.enabled
+            ? '✅ Force Join Enabled'
+            : '❌ Force Join Disabled'
+    );
+}
+if (data === 'fj_list') {
+console.log('FJ_LIST_HIT');
+    processed = true;
+
+    const forcejoin = db.loadDb('forcejoin.json') || {
+        enabled: true,
+        channels: []
+    };
+
+    if (forcejoin.channels.length === 0) {
+        return ctx.reply('❌ No force join channels found.');
+    }
+
+    let txt = '📋 FORCE JOIN CHANNELS\n\n';
+    const buttons = [];
+
+    forcejoin.channels.forEach((ch, index) => {
+
+        if (ch.type === 'public') {
+            txt += `${index + 1}. 🌐 ${ch.username}\n`;
+        } else {
+            txt += `${index + 1}. 🔒 ${ch.channelId}\n`;
+        }
+
+        buttons.push([
+            {
+                text: `🗑 Delete #${index + 1}`,
+                callback_data: `fj_delete_${index}`
+            }
+        ]);
+    });
+
+    buttons.push([
+        {
+            text: '⬅️ Back',
+            callback_data: 'admin_forcejoin'
+        }
+    ]);
+console.log(txt);
+console.log(buttons);
+    return ctx.reply(txt, {
+        reply_markup: {
+            inline_keyboard: buttons
+        }
+    });
+}
+
+if (data.startsWith('fj_delete_')) {
+    processed = true;
+
+    const index = parseInt(
+        data.replace('fj_delete_', '')
+    );
+
+    const forcejoin = db.loadDb('forcejoin.json') || {
+        enabled: true,
+        channels: []
+    };
+
+    if (
+        !isNaN(index) &&
+        forcejoin.channels[index]
+    ) {
+        forcejoin.channels.splice(index, 1);
+
+        db.saveDb(
+            'forcejoin.json',
+            forcejoin
+        );
+
+        return ctx.reply(
+            '✅ Channel deleted successfully.'
+        );
+    }
+
+    return ctx.reply(
+        '❌ Invalid channel.'
+    );
+}
+if (data === 'fj_verify') {
+    processed = true;
+
+    const forcejoin = db.loadDb('forcejoin.json') || {
+        enabled: true,
+        channels: []
+    };
+
+    let allJoined = true;
+
+    for (const ch of forcejoin.channels) {
+
+        if (ch.type === 'public') {
+
+            try {
+               const member = await ctx.telegram.getChatMember(
+    ch.username.replace('@', ''),
+    ctx.from.id
+);
+console.log(
+    'VERIFY:',
+    ch.username,
+    ctx.from.id
+);
+                if (
+                    member.status === 'left' ||
+                    member.status === 'kicked'
+                ) {
+                    allJoined = false;
+                    break;

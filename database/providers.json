@@ -1,0 +1,20 @@
+[
+    {
+        "id": "prov_primary",
+        "name": "Simulated Provider A",
+        "url": "http://localhost:3000/api",
+        "key": "mock_key_alpha",
+        "priority": 1,
+        "status": "active",
+        "successRate": 100,
+        "updatedAt": "2026-06-15T09:42:30.300Z"
+    },
+    {
+        "id": "prov_secondary",
+        "name": "Simulated Provider B (Failover)",
+        "url": "http://localhost:3000/api",
+        "key": "mock_key_beta",
+        "priority": 2,
+        "status": "active"
+    }
+]

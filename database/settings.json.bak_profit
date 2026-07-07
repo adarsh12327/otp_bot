@@ -1,0 +1,28 @@
+{
+    "bot_name": "Adarshpatel",
+    "currency": "₹",
+    "referral_percent": 10,
+    "support_username": "kaplooter",
+    "maintenance_mode": false,
+    "min_recharge": 20,
+    "max_recharge": 50000,
+    "order_timeout": 1200,
+    "theme": "Dark Premium",
+    "admins": [],
+    "pending_payments": [],
+    "pending_withdrawals": [],
+    "user_prefs": {
+        "7972816159": {
+            "language": "English",
+            "notifications": "ENABLED",
+            "theme": "Dark Premium"
+        },
+        "8286947651": {
+            "language": "English",
+            "notifications": "ENABLED",
+            "theme": "Dark Premium"
+        }
+    },
+    "upi_id": "kapadarsh@fam",
+    "qr_file": "AgACAgUAAxkBAAIJoWpA0_pnp8Nq7sTb4lkRWMTlmgr0AAIRE2sbsr0AAVY4fXW2Z0DTrgEAAwIAA3gAAzwE"
+}

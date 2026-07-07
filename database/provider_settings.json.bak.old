@@ -1,0 +1,22 @@
+{
+    "grizzly": {
+        "enabled": true,
+        "apiKey": "mock_grizzly_key",
+        "baseUrl": "https://api.grizzlysms.com/stubs/handler_api.php"
+    },
+    "sms_activate": {
+        "enabled": true,
+        "apiKey": "mock_activate_key",
+        "baseUrl": "https://api.sms-activate.org/stubs/handler_api.php"
+    },
+    "fivesim": {
+        "enabled": true,
+        "apiKey": "mock_5sim_key",
+        "baseUrl": "https://api1.5sim.net/stubs/handler_api.php"
+    },
+    "sms_man": {
+        "enabled": true,
+        "apiKey": "mock_smsman_key",
+        "baseUrl": "https://api.sms-man.com/stubs/handler_api.php"
+    }
+}

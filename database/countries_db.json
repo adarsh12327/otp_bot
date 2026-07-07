@@ -1,0 +1,57 @@
+[
+    {
+        "id": "22",
+        "name": "INDIA",
+        "emoji": "🇮🇳",
+        "enabled": true
+    },
+    {
+        "id": "66",
+        "code": "66",
+        "name": "PAKISTAN",
+        "emoji": "🇵🇰",
+        "enabled": true
+    },
+    {
+        "id": "12",
+        "code": "12",
+        "name": "USA",
+        "emoji": "🇺🇸",
+        "enabled": true
+    },
+    {
+        "id": "81",
+        "code": "81",
+        "name": "Nepal",
+        "emoji": "🇳🇵",
+        "enabled": true
+    },
+    {
+        "id": "3",
+        "code": "3",
+        "name": "China",
+        "emoji": "🇨🇳",
+        "enabled": true
+    },
+    {
+        "id": "50",
+        "code": "50",
+        "name": "Austria",
+        "emoji": "🇦🇹",
+        "enabled": true
+    },
+    {
+        "id": "33",
+        "code": "33",
+        "name": "Colombia",
+        "emoji": "🇨🇴",
+        "enabled": true
+    },
+    {
+        "id": "60",
+        "code": "60",
+        "name": "Bangladesh",
+        "emoji": "🇧🇩",
+        "enabled": true
+    }
+]
