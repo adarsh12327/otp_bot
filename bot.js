@@ -3551,7 +3551,44 @@ bot.on('message', async (ctx, next) => {
         // Fallback user state processing
   const step = ctx.session.step;
         const text = ctx.message.text ? ctx.message.text.trim() : null;
+// =========================
+// ADMIN TOTAL BROADCAST
+// =========================
+if (step === 'ADM_BROADCAST_TEXT' && text) {
 
+    const users = db.loadDb('users.json') || {};
+
+    let success = 0;
+    let failed = 0;
+
+    ctx.session.step = null;
+
+    await ctx.reply("📣 Broadcast started...");
+
+    for (const userId of Object.keys(users)) {
+        try {
+            await ctx.telegram.sendMessage(
+                userId,
+                text,
+                {
+                    parse_mode: "HTML",
+                    disable_web_page_preview: true
+                }
+            );
+            success++;
+        } catch (err) {
+            failed++;
+            console.log(`Broadcast failed for ${userId}: ${err.message}`);
+        }
+    }
+
+    return ctx.reply(
+        `✅ Broadcast Completed\n\n` +
+        `👥 Total Users: ${Object.keys(users).length}\n` +
+        `✅ Success: ${success}\n` +
+        `❌ Failed: ${failed}`
+    );
+            }
 // =========================
 // FORCE JOIN PUBLIC
 // =========================
